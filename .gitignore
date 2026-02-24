@@ -1,6 +1,8 @@
 .env
 *.env
 .hide/**
+_root/data/*.json
+_root/data/*.db
 # Logs
 logs
 *.log

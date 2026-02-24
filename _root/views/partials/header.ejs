@@ -1,4 +1,98 @@
-<nav>
-    <a href="/chat">聊天</a>
-    <a href="/todo">待辦</a>
-</nav>
+<header class="top_header">
+    <link rel="stylesheet" href="/assets/css/lib.css">
+    <h1 id="h1PBA">PBA</h1>
+    <nav class="top_menu-bar fx-ac">
+        <div class="top_menu-item fx-rl">
+            <button onclick="menu_toggle('menu1')" class="menu-btn">a</button>
+            <ul class="top_menu none" id="menu1">
+                <li><a href="/chat">聊天</a></li>
+                <li><a href="/todo">待辦</a></li>
+            </ul>
+        </div>
+        <div class="top_menu-item fx-rl">
+            <button onclick="menu_toggle('menu2')" class="menu-btn">b</button>
+            <ul class="top_menu none" id="menu2">
+                <li><a href="/chat">聊天</a></li>
+                <li><a href="/todo">待辦</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <script>
+        window.addEventListener('click', function(event) {
+            if (!event.target.matches('.menu-btn')) {
+                menu_toggle(null);
+            }
+        });
+        // console.log()
+        function v_toggle(id) {
+            document.getElementById(id)?.classList.toggle('none');
+        };
+
+        function menu_toggle(menu_id) {
+            const menus = document.getElementsByClassName('top_menu');
+            for (let menu of menus) {
+                if (menu.id == menu_id) menu.classList.toggle('none');
+                else menu.classList.add('none');
+            }
+        }
+    </script>
+
+    <style>
+        #h1PBA {
+            margin: 0;
+            /* padding: 10px; */
+        }
+
+        li {
+            list-style: none;
+        }
+
+        .top_header {
+            display: flex;
+            background-color: whitesmoke;
+            border-bottom: 2px solid rgba(0,0,0,0.2) ;
+        }
+
+        .top_menu-item  {
+            margin: 3px;
+        }
+
+        .top_menu-item button {
+            background-color: rgb(188, 188, 188);
+        }
+        .top_menu {
+            position: absolute;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            background-color: rgb(188, 188, 188);
+            top: 100%;
+            left: 0;
+            padding: 5px;
+            width: max-content;
+            margin: 0;
+            border-radius: 5px;
+        }
+
+        ul.top_menu li {
+            padding: 5px 0;
+            border-radius: 2px;
+        }
+
+        ul.top_menu li a {
+            padding: 5px 10px;
+        }
+
+        ul.top_menu li:hover {
+            background-color: rgb(215, 215, 215);
+        }
+
+        .top_menu-bar button {
+            min-width: 60px;
+            width: max-content;
+            border: 2px solid gray;
+            border-radius: 3px;
+            height: 30px;
+        }
+    </style>
+</header>

@@ -1,11 +1,14 @@
-console.log("begin");
+// console.log("begin");
 // app.js
 const express = require('express');
 const app = express();
+app.use(express.static('public'));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('view engine', 'ejs');
 app.set('views', './views');
 const ejs = require('ejs');
+
 
 function render(res, page, data = {}) {
     ejs.renderFile(`views/pages/${page}.ejs`, data, (err, content) => {

@@ -1,0 +1,41 @@
+body {
+    margin: 0;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+.fx {
+    display: flex;
+}
+
+.rl {
+    position: relative;
+}
+
+.fx-rl {
+    position: relative;
+    display: flex;
+}
+
+.fx-ac {
+    display: flex;
+    align-items: center;
+}
+
+.block {
+    display: block;
+}
+
+.none {
+    display: none;
+}
