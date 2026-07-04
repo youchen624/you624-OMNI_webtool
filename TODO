@@ -5,3 +5,31 @@ in HTML JS, SlashCMD Holder
 hold some 
 
 
+# OMNI
+- Back-end: Node.js
+- DataBase:
+  - (Docker)PostgreSQL-> User, Account, Relationships, Permissions...
+  - MongoDB    -> Messages, History...
+  - Redis            -> Socket.io, Sessions, Rooms...
+- Frame: React.js/Next.js
+- Sessions:Socket.io/WebSockets
+- Media:WebAssembly (Wasm) + FFmpeg.wasm
+- Game(Embed): Pixi.js
+## PostgreSQL
+- Users
+  - **ID**
+  - UserName
+  - **Password** (Hash
+  - Create_at
+  - Status
+- UserInfo
+  - **ID**
+  - RealName
+  - DisplayName
+  - AvatarUrl
+  - Birth
+  - Sex
+  - BloodType
+  - BloodFactor
+  - Phone Number
+  - Address

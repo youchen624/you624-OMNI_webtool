@@ -28,6 +28,11 @@ app.get('/todo', (req, res) => {
 });
 
 
+app.get('/main', (req, res) => {
+    render(res, 'main', { title: '待辦' });
+});
+
+
 
 // 404
 app.use((req, res) => {

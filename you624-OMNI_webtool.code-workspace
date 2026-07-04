@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../DailyManager"
+		},
+		{
+			"path": "../../../../../__C__/___Projects/OMNI"
 		}
 	],
 	"settings": {}
