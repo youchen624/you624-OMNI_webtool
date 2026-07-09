@@ -73,14 +73,21 @@ function user_fromRow(row: any): User {
 };
 
 
+export const DB = {
+    async pg_query<T= any>(text: string, params?: any[]): Promise<T[]> {
+        const res = await pool_PostgreSQL.query(text, params);
+        return res.rows as T[];
+    },
+};
 
+/*
 const DB = {
     /**
      * PG通用查詢方法
      * @param {string} text   PG-SQL
      * @param {Array}  params params
      * @returns {Promise}
-     */
+     * /
     pg_query: async (text: string, params?: any[]): Promise<QueryResult> => {
         try {
             const result = await pool_PostgreSQL.query(text, params);
@@ -94,7 +101,7 @@ const DB = {
     /**
      * PostgreSQL initialization
      * @returns {void}
-    */
+    * /
     async initTable(): Promise<void> {
         const PG_SQL = `
             CREATE TABLE IF NOT EXISTS users (
@@ -129,7 +136,7 @@ const DB = {
      *   return hashed as PasswordHash;
      * }
      * ```
-     */
+     * /
     async user_create(username: string, password_hash: string): Promise<User> {
         USERNAME_BLACK_LIST.some(banWord => {   // illegal prefix detecting
             if (username.startsWith(banWord)) throw new AppError(ErrorCode.USER.USERNAME_ILLEGAL);
@@ -155,7 +162,7 @@ const DB = {
      * - Auth Account
      * @param {string} username      User Name
      * @param {string} password_hash PSW Hash
-     */
+     * /
     async user_auth(username: string, password_hash: string): Promise<User | null> {
         const PG_SQL = `
             SELECT id, username, state, create_at FROM users WHERE state = $1;
@@ -174,13 +181,14 @@ const DB = {
      * # Users
      * - Delete Account
      * @param
-     */
+     * /
 
     /**
      * # Users
      * - Change Account PSW
      * @param {string}
-     */
+     * /
 };
+*/
 
 export default DB;
