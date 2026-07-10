@@ -6,9 +6,9 @@ export const ErrorCode = {
         NOT_FOUND: 'DB_NOT_FOUND',
     },
     USER: { // [USER] User
-        USERNAME_ILLEGAL:           'USER_USERNAME_ILLEGAL',            // 使用者名稱不合規
-        USERNAME_ALREADY_EXISTS:    'USER_USERNAME_ALREADY_EXISTS',     // 使用者名稱已存在
-        USERNAME_NOT_FOUND:         'USER_USERNAME_NOT_FOUND',          // 使用者名稱未找到
+        USERNAME_ILLEGAL:   'USER_USERNAME_ILLEGAL',    // 使用者名稱不合規
+        ALREADY_EXISTS:     'USER_ALREADY_EXISTS',      // 使用者名稱已存在
+        NOT_FOUND:          'USER_NOT_FOUND',           // 使用者名稱未找到
     },
     /*
     AA: {...}

@@ -12,65 +12,6 @@ pool_PostgreSQL.on('error', (err) => {
     console.error("Unexpected error on idle database client", err);
 });
 
-const USERNAME_BLACK_LIST = [
-    'admin',
-    'test',
-    'guest',
-    'del_'
-] as const;
-
-// Users Accounts State
-export const AccountState = {
-    Active: 1,
-    Deleted: 2,
-    Suspension: 3,
-};
-export type AccountState = ValueOf<typeof AccountState>;
-
-// Sex Type
-export const SexType = {
-    Male: 1,
-    Female: 2,
-    Other: 3
-};
-export type SexType = ValueOf<typeof SexType>;
-
-// User Blood Type
-export const BloodType = {
-    A: 1,
-    B: 2,
-    O: 3,
-    AB: 4,
-};
-export type BloodType = ValueOf<typeof BloodType>;
-
-// User Blood Factor
-export const BloodFactor = {
-    Positive: 1,
-    Negative: 2,
-};
-export type BloodFactor = ValueOf<typeof BloodFactor>;
-
-export interface User {
-    id: number,
-    username: string,
-    state: AccountState,
-    create_at: Date,
-    auth_at: Date
-};
-
-
-
-// User row to User interface
-function user_fromRow(row: any): User {
-    return {
-        id: row.id,
-        username: row.username,
-        state: row.state,
-        create_at: row.create_at,
-        auth_at: row.create_at
-    };
-};
 
 
 export const DB = {
