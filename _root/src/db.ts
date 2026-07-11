@@ -1,6 +1,6 @@
 import { Pool, type QueryResult } from 'pg';
 import { type ValueOf } from './types.js';
-import { AppError, ErrorCode } from './erros.js';
+import { AppError, ErrorCode } from './errors.js';
 
 const pool_PostgreSQL = new Pool({
     connectionString: 'postgresql://omni_admin:omni_password123@localhost:5432/omni_core_db',

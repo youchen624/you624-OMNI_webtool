@@ -1,6 +1,6 @@
 import { type ValueOf } from './types.js';
 import { DB } from './db.js';
-import { AppError, ErrorCode } from './erros.js';
+import { AppError, ErrorCode } from './errors.js';
 import argon2 from 'argon2';
 
 // User type
@@ -82,10 +82,10 @@ export const Users = {
     // get User by ID
     async getByID(id: number): Promise<User | null> {
         const PG_SQL = `
-            SELECT id, username, state, create_at FROM users WHERE id = $1 AND state = $2;
+            SELECT id, username, state, create_at FROM users WHERE id = $1;
         `;
         try {
-            const results = await DB.pg_query(PG_SQL, [id, UserState.Active]);
+            const results = await DB.pg_query(PG_SQL, [id]);
             if(!results.length) return null;
             return user_fromRow(results[0]);
         } catch(e: any) {
@@ -102,10 +102,28 @@ export const Users = {
         try {
             const results = await DB.pg_query(PG_SQL, [username, UserState.Active]);
             if (!results.length) return null; // throw new AppError(ErrorCode.USER.NOT_FOUND);
-            if (await this.PSW.verify(password, results[0].password_hash)) {
+            if (await Users.PSW.verify(password, results[0].password_hash)) {
                 return user_fromRow(results[0]);
             } else return null;
         } catch(e: any) { throw e; };
+    },
+
+    // PSW change
+    async password_update(user: User, password_new: string): Promise<User> {
+        const PG_SQL = `
+            UPDATE users SET password_hash = $2
+            WHERE id = $1
+            RETURNING id;
+        `;
+        try {
+            const password_hash = await Users.PSW.hash(password_new);
+            const results = await DB.pg_query(PG_SQL, [user.id, password_hash]);
+            if (results.length) return user;
+            else throw new AppError(ErrorCode.USER.NOT_FOUND);
+        } catch(e: any) {
+            console.error(`[Users][DB]PasswordUpdating❌:\n`, e);
+            throw e;
+        };
     },
 
     // create User
@@ -116,30 +134,47 @@ export const Users = {
             RETURNING id, username, state, create_at;
         `;
         try {
-            const password_hash = await this.PSW.hash(password);
+            const password_hash = await Users.PSW.hash(password);
             const results = await DB.pg_query(PG_SQL, [username, password_hash, UserState.Active]);
             return user_fromRow(results[0]);
         } catch(e: any) {
-            if (e.code === '23505') throw e;
             console.error(`[USERS][DB]Create❌:\n`, e);
+            if (e.code !== '23505') throw e;
             throw new AppError(ErrorCode.USER.ALREADY_EXISTS);
         };
     },
 
     // change User state
-    async state_set(id: User, state: UserState): Promise<User> {
+    async state_set(user: User, state: UserState): Promise<User> {
         const PG_SQL = `
             UPDATE users SET state = $2 WHERE id = $1
             RETURNING id, username, state, create_at;
         `;
         try {
-            const results = await DB.pg_query(PG_SQL, [id, state]);
+            const results = await DB.pg_query(PG_SQL, [user.id, state]);
             if (!results.length) throw new AppError(ErrorCode.USER.NOT_FOUND);
             return user_fromRow(results[0]);
         } catch(e) {
             console.error(`[Users][DB]StateSetting❌:\n`, e);
             throw e;
         };
+    },
+
+    // delete User (soft)
+    async delete_soft(user: User): Promise<boolean> {
+        const PG_SQL = `
+            UPDATE users SET
+                state = $2,
+                username = 'del_' || FLOOR(EXTRACT(EPOCH FROM NOW())) || '_' || username
+            WHERE id = $1 AND state != $2
+            RETURNING id, username, state;
+        `;
+        try {
+            const results = await DB.pg_query(PG_SQL, [user.id, UserState.Deleted]);
+            return !!results.length;
+        } catch(e: any) {
+            return false;
+        }
     },
 };
 
@@ -149,17 +184,22 @@ export const Users = {
     const PG_SQL = `
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
-            username VARCHAR(50) UNIQUE NOT NULL,
+            username VARCHAR(64) UNIQUE NOT NULL,
             password_hash VARCHAR(255) NOT NULL,
             state SMALLINT NOT NULL DEFAULT 0,
-            cerate_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+            create_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
         );
     `;      // users: { id, username, password_hash, state, create_at }
+    // username max: 16
     /*
     CREATE TABLE IF NOT EXISTS users_info (
         id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
         update_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-    )
+    );
+    CREATE TABLE IF NOT EXISTS users_setting (
+        id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+        update_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    );
     */
     // email VARCHAR(100) UNIQUE NOT NULL,
     try {

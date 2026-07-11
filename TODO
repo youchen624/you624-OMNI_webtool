@@ -1,3 +1,6 @@
+addition User => UserSession
+{User, auth_at...}
+
 db.ts only query
 SQL in user.ts and others
 
