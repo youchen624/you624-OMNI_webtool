@@ -1,3 +1,4 @@
+#TODO users.ts:203 TRIGGER CREATE (HANG ON)
 addition User => UserSession
 {User, auth_at...}
 

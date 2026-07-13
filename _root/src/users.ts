@@ -8,7 +8,7 @@ export type User = {
     id: number,
     username: string,
     state: UserState,
-    create_at: Date,
+    created_at: Date,
     auth_at: Date
 };
 
@@ -53,7 +53,7 @@ function user_fromRow(row: any): User {
         id: row.id,
         username: row.username,
         state: row.state,
-        create_at: new Date(row.create_at),
+        created_at: new Date(row.created_at),
         auth_at: new Date()
     };
 };
@@ -82,7 +82,7 @@ export const Users = {
     // get User by ID
     async getByID(id: number): Promise<User | null> {
         const PG_SQL = `
-            SELECT id, username, state, create_at FROM users WHERE id = $1;
+            SELECT id, username, state, created_at FROM users WHERE id = $1;
         `;
         try {
             const results = await DB.pg_query(PG_SQL, [id]);
@@ -97,7 +97,7 @@ export const Users = {
     // auth User by login
     async auth(username: string, password: string): Promise<User | null> {
         const PG_SQL = `
-            SELECT id, username, password_hash, state, create_at FROM users WHERE username = $1 AND state = $2;
+            SELECT id, username, password_hash, state, created_at FROM users WHERE username = $1 AND state = $2;
         `;
         try {
             const results = await DB.pg_query(PG_SQL, [username, UserState.Active]);
@@ -131,7 +131,7 @@ export const Users = {
         const PG_SQL = `
             INSERT INTO users (username, password_hash, state)
             VALUES ($1, $2, $3)
-            RETURNING id, username, state, create_at;
+            RETURNING id, username, state, created_at;
         `;
         try {
             const password_hash = await Users.PSW.hash(password);
@@ -148,7 +148,7 @@ export const Users = {
     async state_set(user: User, state: UserState): Promise<User> {
         const PG_SQL = `
             UPDATE users SET state = $2 WHERE id = $1
-            RETURNING id, username, state, create_at;
+            RETURNING id, username, state, created_at;
         `;
         try {
             const results = await DB.pg_query(PG_SQL, [user.id, state]);
@@ -187,9 +187,21 @@ export const Users = {
             username VARCHAR(64) UNIQUE NOT NULL,
             password_hash VARCHAR(255) NOT NULL,
             state SMALLINT NOT NULL DEFAULT 0,
-            create_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-        );
-    `;      // users: { id, username, password_hash, state, create_at }
+            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+        );  -- table users
+        CREATE TABLE IF NOT EXISTS users_info (
+        );  -- table users_info
+
+        CREATE OR REPLACE FUNCTION update_updated_at_column()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            NEW.updated_at = NOW;
+            RETURN NEW;
+        END
+        $$ language 'plpgsql';  -- SQL function update_updated_at
+
+        
+    `;      // users: { id, username, password_hash, state, created_at }
     // username max: 16
     /*
     CREATE TABLE IF NOT EXISTS users_info (
