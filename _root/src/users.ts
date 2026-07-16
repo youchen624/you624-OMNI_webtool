@@ -22,6 +22,7 @@ export type UserState = ValueOf<typeof UserState>;
 
 // User Sex Type
 export const SexType = {
+    None: 0,
     Male: 1,
     Female: 2,
     Other: 3
@@ -30,6 +31,7 @@ export type SexType = ValueOf<typeof SexType>;
 
 // User Blood Type
 export const BloodType = {
+    N: 0,
     A: 1,
     B: 2,
     O: 3,
@@ -189,8 +191,20 @@ export const Users = {
             state SMALLINT NOT NULL DEFAULT 0,
             created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
         );  -- table users
+
         CREATE TABLE IF NOT EXISTS users_info (
+            id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+            update_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
         );  -- table users_info
+
+        CREATE TABLE IF NOT EXISTS users_info_health (
+            id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+            update_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+            sex SMALLINT NOT NULL DEFAULT 0,
+            blood SMALLINT NOT NULL DEFAULT 0,
+            blood_factor SMALLINT NOT NULL DEFAULT 0
+        );  -- table users_info_health
+
 
         CREATE OR REPLACE FUNCTION update_updated_at_column()
         RETURNS TRIGGER AS $$
@@ -200,14 +214,13 @@ export const Users = {
         END
         $$ language 'plpgsql';  -- SQL function update_updated_at
 
-        
+        CREATE TRIGGER update_users_info_modtime
+            BEFORE UPDATE ON users_info
+            FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+        -- update trigger
     `;      // users: { id, username, password_hash, state, created_at }
     // username max: 16
     /*
-    CREATE TABLE IF NOT EXISTS users_info (
-        id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-        update_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
-    );
     CREATE TABLE IF NOT EXISTS users_setting (
         id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
         update_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
