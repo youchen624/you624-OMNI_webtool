@@ -1,4 +1,97 @@
-#TODO users.ts:203 TRIGGER CREATE (HANG ON)
+# TODO
+
+## Database part
+
+```ini
+[users]
+- users {
+  id,
+  username,
+  password_hash,
+  state,  // enum(SMALLINT)
+  created_at,
+  updated_at
+}
+- users_info {
+  user_id, // REF => users.id
+  ...
+}
+- user_info_health {
+  user_id, // REF => users.id
+  
+}
+- users_setting {
+  user_id, // REF => users.id
+  ...
+}
+[rooms]
+- rooms {
+  uuid,
+  type,
+  name,
+  created_at,
+}
+- rooms_info {
+  uuid, // references to rooms
+  description,  // text
+  setting,  // JSON
+}
+- room_users (multi) {
+  uuid, // references to rooms
+  user_id,
+  role,     // enum(SMALLINT)
+  last_read_message_id,   // references to message_id
+  joined_at,
+  KEY (uuid, user_id)
+}
+- room_rooms (multi) {
+  room_uuid,  // REF => rooms.uuid
+  child_room_uuid,
+  KEY (uuid, room_id)
+}
+[messages]
+- messages {
+  id,
+  room_uuid,
+  sender_id,
+  content, // text only
+  is_deleted,  // boolean
+  created_at,
+  update_at,
+  INDEX,//
+}
+// edit problem =>> MOV old data to other TABLE, direct UPDATE ORG row
+- messages_history {
+  id,
+  msg_id,
+  order,  // the orders of the msg with same id
+  content,
+  create_at
+}
+/*
+* when a msg-update happen:>
+* MOV old msg => history
+* then, UPDATE messages
+*/
+- messages_attachments {
+  id,
+  message_id,     // references to messages
+  type,    // enum(SMALLINT) {text, image, video, record, file}
+  is_deleted, // boolean
+  payload,
+}
+
+[user_relation]
+```
+
+## part
+
+### Login process
+
+/
+
+## a
+
 addition User => UserSession
 {User, auth_at...}
 
@@ -7,12 +100,13 @@ SQL in user.ts and others
 
 SlashCMD class
 
-
 in HTML JS, SlashCMD Holder
-hold some 
+hold some
 
+---
 
-# OMNI
+## OMNI
+
 - Back-end: Node.js
 - DataBase:
   - (Docker)PostgreSQL-> User, Account, Relationships, Permissions...
@@ -22,7 +116,9 @@ hold some
 - Sessions:Socket.io/WebSockets
 - Media:WebAssembly (Wasm) + FFmpeg.wasm
 - Game(Embed): Pixi.js
+
 ## PostgreSQL
+
 - Users
   - **ID**
   - UserName
@@ -40,3 +136,5 @@ hold some
   - BloodFactor
   - Phone Number
   - Address
+
+---
