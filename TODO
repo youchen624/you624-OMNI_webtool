@@ -1,5 +1,17 @@
 # TODO
 
+1. update DB async problem by a class
+
+## idea part
+
+### tokens (points/coins/credits)
+
+- [G-token]/[General-token] general/global token
+- [Bug-token] when a bug been fixed / reported a bug and it is real
+- [AD-token] watch an AD video
+- [EDU-token]
+- [Test-token]
+
 ## Database part
 
 ```ini
@@ -81,10 +93,15 @@
   payload,
 }
 
-[user_relation]
+[users_relations]
+- relation_token
 ```
 
-## part
+## API part
+
+## GUI pa
+
+- a Clock at center of top nav
 
 ### Login process
 
@@ -138,3 +155,13 @@ hold some
   - Address
 
 ---
+
+---
+
+## Unknown
+
+- 事實查核
+  - 0~1 確定不是~確定是;;使用不同顏色之文字/文字輪廓
+- Font (users setting)
+- 生活品質分數
+- EDU pages/Nodes
