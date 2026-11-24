@@ -4,7 +4,7 @@
 > this is for self-organization use, all copyright reserved.
 
 a web-tool with multi-functions  
-test:
+a multi-platform software services
 
 ## TODO tasks
 
@@ -24,7 +24,12 @@ Back-ends
 Front-ends
 
 - [ ] GUI
-  - [ ] Clock (top-center)
+  - [ ] Frame Design
+    - [ ] Desktop ver
+    - [ ] Mobile ver
+  - [ ] Render
+  - [ ] Player
+  - [ ] Clocker (top-center)
     - [ ] Time
     - [ ] Calender
     - [ ] Timer

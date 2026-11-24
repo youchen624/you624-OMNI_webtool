@@ -1,6 +1,8 @@
 # TODO
 
 1. update DB async problem by a class
+2. users.ts
+3. a message sendable
 
 ## idea part
 
@@ -99,7 +101,7 @@
 
 ## API part
 
-## GUI pa
+## GUI part
 
 - a Clock at center of top nav
 

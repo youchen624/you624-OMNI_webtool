@@ -15,6 +15,7 @@ pool_PostgreSQL.on('error', (err) => {
 
 
 export const DB = {
+    PostgreSQL_DataBase: pool_PostgreSQL,    // DB raw
     async pg_query<T= any>(text: string, params?: any[]): Promise<T[]> {
         const res = await pool_PostgreSQL.query(text, params);
         return res.rows as T[];
